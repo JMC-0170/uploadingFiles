@@ -1,0 +1,85 @@
+
+<app-alerts></app-alerts>
+
+<div class="container-fluid">
+    <div class="row header-section">
+        <span> File Upload & Download </span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="row card">
+                <div class="col-sm-12">
+                    <h4>Upload Section</h4>
+                     <p>Queue length: {{ uploader?.queue?.length }}</p>
+                    <div id="fileSelector">
+                        <input type="file"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" name="fileUplaod" id="fileUpload"
+                        multiple ng2FileSelect [uploader]="uploader">                                               
+                    </div>
+                   
+                    <div>
+                        <div class="row uploadList" *ngFor="let item of uploader.queue; let i = index">
+                            <div class="col-sm-4">{{item.file.name}}</div>
+
+
+                            <div class="col-sm-4">{{ item?.file?.size/1024/1024 | number:'.2' }} MB</div>
+
+
+                            <div class="col-sm-4">
+                                    <td class="text-center">
+                                            <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                            <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                            <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                        </td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" 
+                                    [ngStyle]="{'width':item.progress+'%'}"></div>
+                                </div>
+                            </div>
+                           
+
+                            <div class="col-sm-4">
+                                    <button type="button" class="btn btn-success btn-xs" (click)="uploadItem(item)"  [disabled]=" item.file.size > 1000000 ||  item.isReady || item.isUploading || item.isSuccess">
+                                            <span class="glyphicon glyphicon-upload"></span>  Upload</button>
+                                   
+                                   
+                                    <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()" [disabled]="!item.isUploading"> 
+                                            <span class="glyphicon glyphicon-ban-circle"></span>  Cancel</button>
+                                    
+                                    
+                                        <button type="button" class="btn btn-danger btn-xs" (click)="removeItem(item)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                            Remove</button>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="row" *ngIf="uploader?.queue?.length > 0">
+
+                            <button type="button" class="btn btn-danger" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                                    <span class="glyphicon glyphicon-trash"></span> Remove All</button>
+
+                    </div>
+                </div>                
+            </div>
+
+            <div class="row card">
+                <h4>Download Section</h4>
+
+                <div class="row" *ngFor="let item of attachmentList; let i = index"
+                style="margin:10px;padding:5px;background-color:rgb(231, 229, 229); border-radius:5px; line-height:40px;">
+                    <div class="col-sm-7">{{item.originalname}}</div>
+                    <div class="col-sm-5" style="text-align:center;"><button type="button" class="btn btn-primary" (click)="download(i)">Download</button></div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+<!--
+<div class="row" *ngFor="let item of Items; let i = index">
+<a>{{item.name}}</a>
+</div>-->
+
